@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aman Sapkota</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to right, #e3f2fd, #fce4ec);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      animation: fadeIn 1s ease-in-out;
+    }
+    .container {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 720px;
+      transition: all 0.3s ease;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      font-weight: 700;
+      font-size: 28px;
+      color: #333;
+    }
+    label {
+      font-weight: 600;
+      margin-top: 20px;
+      display: block;
+      color: #444;
+    }
+    input, textarea, select {
+      width: 100%;
+      margin-top: 8px;
+      padding: 14px 16px;
+      font-size: 16px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      background-color: #f9f9f9;
+      transition: border 0.3s, box-shadow 0.3s;
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: #42a5f5;
+      box-shadow: 0 0 0 3px rgba(66, 165, 245, 0.2);
+      outline: none;
+    }
+    button {
+      margin-top: 30px;
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #42a5f5, #ab47bc);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+    textarea {
+      margin-top: 10px;
+      resize: vertical;
+      background: #f1f1f1;
+      border: 1px solid #ccc;
+    }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2> Google Drive Embed Code Generator</h2>
+    <label for="driveLink">🔗 Google Drive File Link</label>
+    <input type="text" id="driveLink" placeholder="https://drive.google.com/file/d/FILE_ID/view?usp=sharing" />
+
+    <label for="mediaType">📁 Media Type</label>
+    <select id="mediaType">
+      <option value="pdf">PDF</option>
+      <option value="video">Video</option>
+      <option value="audio">Audio</option>
+      <option value="image">Image</option>
+      <option value="other">Generic File Preview</option>
+    </select>
+
+    <label for="height">📐 Embed Height (px)</label>
+    <input type="text" id="height" value="600" />
+
+    <button onclick="generateEmbed()">🎯 Generate Embed Code</button>
+
+    <label for="output">📋 Your Embed Code</label>
+    <textarea id="output" rows="8" readonly></textarea>
+  </div>
+
+  <script>
+    function extractFileId(link) {
+      const match = link.match(/\/d\/([a-zA-Z0-9_-]+)/);
+      return match ? match[1] : null;
+    }
+
+    function generateEmbed() {
+      const link = document.getElementById("driveLink").value;
+      const mediaType = document.getElementById("mediaType").value;
+      const height = document.getElementById("height").value;
+      const fileId = extractFileId(link);
+
+      if (!fileId) {
+        document.getElementById("output").value = "❌ Invalid Google Drive link!";
+        return;
+      }
+
+      const embedURL = `https://drive.google.com/file/d/${fileId}/preview`;
+
+      const iframe = `
+<div style="position: relative; height: ${height}px;">
+  <iframe 
+    style="border: none;" 
+    src="${embedURL}" 
+    width="100%" 
+    height="${height}px">
+  </iframe>
+  <div style="position: absolute; top: 0; left: 0; height: 60px; width: 100%; background-color: white; z-index: 10;"></div>
+</div>`;
+
+      document.getElementById("output").value = iframe.trim();
+    }
+  </script>
+</body>
+</html>
